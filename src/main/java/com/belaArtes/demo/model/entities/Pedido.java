@@ -4,6 +4,7 @@ import com.belaArtes.demo.model.entities.enums.StatusPedido;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -69,6 +70,14 @@ public class Pedido implements Serializable {
 
     public void setStatus(StatusPedido status) {
         this.status = status;
+    }
+
+    public List<ItemPedido> getItens() {
+        return itens;
+    }
+
+    public void setItens(List<ItemPedido> itens) {
+        this.itens = itens;
     }
 
     @Override
