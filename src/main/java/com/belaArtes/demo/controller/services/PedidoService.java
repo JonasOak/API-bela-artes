@@ -22,4 +22,24 @@ public class PedidoService {
          Optional<Pedido> obj = repository.findById(id);
          return obj.get();
     }
+
+    public Pedido inserir(Pedido obj) {
+        return repository.save(obj);
+    }
+
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
+
+    public Pedido atualizar(int id, Pedido obj) {
+        Pedido pedido = repository.getReferenceById(id);
+        atualizarDados(pedido, obj);
+        return  repository.save(pedido);
+    }
+
+    private void atualizarDados(Pedido pedido, Pedido obj) {
+        if (obj.getStatus() != null && !obj.getStatus().equals(pedido.getStatus())) {
+            pedido.setStatus(obj.getStatus());
+        }
+    }
 }
