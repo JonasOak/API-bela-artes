@@ -3,16 +3,19 @@ package com.belaArtes.demo.model.entities;
 import com.belaArtes.demo.model.entities.enums.StatusPedido;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "Pedido")
-public class Pedido {
+public class Pedido implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_pedido")
     private int idPedido;
 
     @ManyToOne
@@ -38,6 +41,7 @@ public class Pedido {
         this.dataPedido = dataPedido;
         this.status = status;
     }
+
 
     public int getIdPedido() {
         return idPedido;
