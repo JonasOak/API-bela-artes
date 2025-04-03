@@ -8,11 +8,10 @@ import com.belaArtes.demo.model.entities.enums.Cargo;
 import com.belaArtes.demo.model.entities.enums.StatusPedido;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,5 +32,26 @@ public class PedidoResource {
     public ResponseEntity<Pedido> buscarPorId(@PathVariable("id") int id) {
         Pedido pedido = service.buscarPorId(id);
         return ResponseEntity.ok().body(pedido);
+    }
+
+    @PostMapping
+    public ResponseEntity<Pedido> inserir(@RequestBody Pedido obj) {
+        obj = service.inserir(obj);
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(obj.getIdPedido()).toUri();
+        return ResponseEntity.created(uri).body(obj);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable int id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Pedido> atualizar(@PathVariable int id, @RequestBody Pedido obj) {
+        obj = service.atualizar(id, obj);
+        return ResponseEntity.ok().body(obj);
     }
 }
