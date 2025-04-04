@@ -3,6 +3,7 @@ package com.belaArtes.demo.controller.services;
 import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
 import com.belaArtes.demo.model.entities.Pedido;
 import com.belaArtes.demo.model.repositories.PedidoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,14 @@ public class PedidoService {
     }
 
     public Pedido atualizar(int id, Pedido obj) {
-        Pedido pedido = repository.getReferenceById(id);
-        atualizarDados(pedido, obj);
-        return  repository.save(pedido);
+        try {
+            Pedido pedido = repository.getReferenceById(id);
+            atualizarDados(pedido, obj);
+            return  repository.save(pedido);
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     private void atualizarDados(Pedido pedido, Pedido obj) {
