@@ -1,5 +1,6 @@
 package com.belaArtes.demo.controller.services;
 
+import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
 import com.belaArtes.demo.model.entities.Pedido;
 import com.belaArtes.demo.model.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class PedidoService {
 
     public Pedido buscarPorId(int id) {
          Optional<Pedido> obj = repository.findById(id);
-         return obj.get();
+         return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public Pedido inserir(Pedido obj) {
