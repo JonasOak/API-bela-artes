@@ -1,6 +1,6 @@
 package com.belaArtes.demo.controller.services;
 
-import com.belaArtes.demo.exceptions.ResourceNotFoundException;
+import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
 import com.belaArtes.demo.model.entities.ItemPedido;
 import com.belaArtes.demo.model.repositories.ItemPedidoRepository;
 import com.belaArtes.demo.model.repositories.PedidoRepository;

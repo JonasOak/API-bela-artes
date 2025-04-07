@@ -1,6 +1,6 @@
 package com.belaArtes.demo.controller.services;
 
-import com.belaArtes.demo.exceptions.ResourceNotFoundException;
+import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
 import com.belaArtes.demo.model.entities.Cliente;
 import com.belaArtes.demo.model.repositories.ClienteRepository;
 import jakarta.persistence.EntityNotFoundException;
