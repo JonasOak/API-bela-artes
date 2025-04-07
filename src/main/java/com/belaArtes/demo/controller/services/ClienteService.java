@@ -5,10 +5,8 @@ import com.belaArtes.demo.model.entities.Cliente;
 import com.belaArtes.demo.model.repositories.ClienteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 import java.net.URI;
 import java.util.List;
@@ -74,9 +72,6 @@ public class ClienteService {
         }
         if (novoCliente.getComplemento() != null) {
             clienteExistente.setComplemento(novoCliente.getComplemento());
-        }
-        if (novoCliente.getUsuario() != null) {
-            clienteExistente.setUsuario(novoCliente.getUsuario());
         }
     }
 }
