@@ -3,6 +3,7 @@ package com.belaArtes.demo.controller.resources;
 
 import com.belaArtes.demo.controller.services.ItemPedidoService;
 import com.belaArtes.demo.model.entities.ItemPedido;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,39 +16,48 @@ import java.util.List;
 @RequestMapping(value = "/itens-pedido")
 public class ItemPedidoResource {
 
+    private final ItemPedidoService itemPedidoService;
+
     @Autowired
-    private ItemPedidoService service;
+    public ItemPedidoResource(ItemPedidoService itemPedidoService) {
+        this.itemPedidoService = itemPedidoService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<ItemPedido>> findAll() {
-        List<ItemPedido> list = service.buscarTodos();
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<List<ItemPedido>> buscarTodos() {
+        List<ItemPedido> itens = itemPedidoService.buscarTodos();
+        return ResponseEntity.ok(itens);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ItemPedido> buscarPorId(@PathVariable("id") int id) {
-        ItemPedido item = service.buscarPorId(id);
-        return ResponseEntity.ok().body(item);
+    public ResponseEntity<ItemPedido> buscarPorId(@PathVariable int id) {
+        ItemPedido item = itemPedidoService.buscarPorId(id);
+        return ResponseEntity.ok(item);
     }
 
     @PostMapping
-    public ResponseEntity<ItemPedido> inserir(@RequestBody ItemPedido obj) {
-        obj = service.inserir(obj);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(obj.getIdItemPedido()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+    public ResponseEntity<ItemPedido> criarItemPedido(@Valid @RequestBody ItemPedido item) {
+        ItemPedido itemSalvo = itemPedidoService.inserir(item);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(itemSalvo.getIdItemPedido())
+                .toUri();
+        return ResponseEntity.created(uri).body(itemSalvo);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deletar(@PathVariable int id) {
-        service.delete(id);
+        itemPedidoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<ItemPedido> atualizar(@PathVariable int id, @RequestBody ItemPedido obj) {
-        obj = service.atualizar(id, obj);
-        return ResponseEntity.ok().body(obj);
+    @PutMapping("/{id}")
+    public ResponseEntity<ItemPedido> atualizarItemPedido(
+            @PathVariable int id,
+            @RequestBody ItemPedido itemAtualizado) {
+
+        // Versão simplificada (sem DTOs por enquanto)
+        ItemPedido item = itemPedidoService.atualizar(id, itemAtualizado);
+        return ResponseEntity.ok(item);
     }
 }
