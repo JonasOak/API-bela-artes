@@ -1,4 +1,4 @@
-package com.belaArtes.demo.controller.resources.exceptions;
+package com.belaArtes.demo.controller.resources;
 
 import com.belaArtes.demo.controller.services.ProdutoService;
 import com.belaArtes.demo.model.entities.Produto;
