@@ -1,6 +1,7 @@
 package com.belaArtes.demo.model.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ public class ItemPedido {
 
     @ManyToOne
     @JoinColumn(name = "id_pedido", nullable = false)
+    @JsonIgnore
     private Pedido pedido;
 
     @ManyToOne

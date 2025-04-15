@@ -3,28 +3,21 @@ package com.belaArtes.demo.controller.services;
 import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
 import com.belaArtes.demo.model.entities.ItemPedido;
 import com.belaArtes.demo.model.repositories.ItemPedidoRepository;
-import com.belaArtes.demo.model.repositories.PedidoRepository;
-import com.belaArtes.demo.model.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+
 
 import java.util.List;
 
 @Service
 public class ItemPedidoService {
 
-    @Autowired
-    private ItemPedidoRepository repository;
+    private final ItemPedidoRepository repository;
 
     @Autowired
-    private PedidoRepository pedidoRepository;
-
-    @Autowired
-    private ProdutoRepository produtoRepository;
+    public ItemPedidoService(ItemPedidoRepository repository) {
+        this.repository = repository;
+    }
 
     public List<ItemPedido> buscarTodos() {
         return repository.findAll();
@@ -32,11 +25,11 @@ public class ItemPedidoService {
 
     public ItemPedido buscarPorId(int id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("ItemPedido com ID " + id + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Item não encontrado"));
     }
 
-    public ItemPedido inserir(ItemPedido obj) {
-        return repository.save(obj);
+    public ItemPedido inserir(ItemPedido item) {
+        return repository.save(item);
     }
 
     public void delete(int id) {
