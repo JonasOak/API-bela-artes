@@ -1,6 +1,5 @@
 package com.belaArtes.demo.model.dto;
 
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
@@ -15,7 +14,7 @@ public class PedidoRequestDTO {
 
     public static class ItemPedidoDTO {
         @NotNull(message = "ID do produto é obrigatório")
-        private Integer produtoId;
+        private Long produtoId;
 
         @NotNull(message = "Quantidade é obrigatória")
         private Integer quantidade;
@@ -23,11 +22,11 @@ public class PedidoRequestDTO {
         @NotNull(message = "Preço unitário é obrigatório")
         private Double precoUnitario;
 
-        public Integer getProdutoId() {
+        public Long getProdutoId() {
             return produtoId;
         }
 
-        public void setProdutoId(Integer produtoId) {
+        public void setProdutoId(Long produtoId) {
             this.produtoId = produtoId;
         }
 

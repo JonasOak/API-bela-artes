@@ -24,7 +24,7 @@ public class ProdutoService {
         return repository.findAll();
     }
 
-    public Produto buscarPorId(int id) {
+    public Produto buscarPorId(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
     }
@@ -34,14 +34,14 @@ public class ProdutoService {
         return repository.save(produto);
     }
 
-    public void deletar(int id) {
+    public void deletar(Long id) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Produto com ID " + id + " não encontrado para deletar");
         }
         repository.deleteById(id);
     }
 
-    public Produto atualizar(int id, Produto produto) {
+    public Produto atualizar(Long id, Produto produto) {
         try {
             Produto produtoExistente = repository.getReferenceById(id);
             atualizarDados(produtoExistente, produto);
