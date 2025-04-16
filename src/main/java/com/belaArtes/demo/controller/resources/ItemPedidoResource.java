@@ -2,7 +2,9 @@ package com.belaArtes.demo.controller.resources;
 
 
 import com.belaArtes.demo.controller.services.ItemPedidoService;
+import com.belaArtes.demo.model.dto.ItemPedidoResponseDTO;
 import com.belaArtes.demo.model.entities.ItemPedido;
+import com.belaArtes.demo.model.entities.Produto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/itens-pedido")
@@ -24,15 +28,18 @@ public class ItemPedidoResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemPedido>> buscarTodos() {
+    public ResponseEntity<List<ItemPedidoResponseDTO>> buscarTodos() {
         List<ItemPedido> itens = itemPedidoService.buscarTodos();
-        return ResponseEntity.ok(itens);
+        List<ItemPedidoResponseDTO> response = itens.stream()
+                .map(this::converterEntidadeParaDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ItemPedido> buscarPorId(@PathVariable int id) {
+    public ResponseEntity<ItemPedidoResponseDTO> buscarPorId(@PathVariable int id) {
         ItemPedido item = itemPedidoService.buscarPorId(id);
-        return ResponseEntity.ok(item);
+        return ResponseEntity.ok(converterEntidadeParaDto(item));
     }
 
     @PostMapping
@@ -56,8 +63,24 @@ public class ItemPedidoResource {
             @PathVariable int id,
             @RequestBody ItemPedido itemAtualizado) {
 
-        // Versão simplificada (sem DTOs por enquanto)
         ItemPedido item = itemPedidoService.atualizar(id, itemAtualizado);
         return ResponseEntity.ok(item);
+    }
+
+    private ItemPedidoResponseDTO converterEntidadeParaDto(ItemPedido itemPedido) {
+        Produto produto = itemPedido.getProduto();
+        String imagemBase64 = Base64.getEncoder().encodeToString(produto.getImagem());
+
+        return new ItemPedidoResponseDTO(
+                itemPedido.getIdItemPedido(),
+                itemPedido.getPedido().getIdPedido(),
+                itemPedido.getPedido().getStatus().name(),
+                itemPedido.getPedido().getDataPedido(),
+                produto.getIdProduto(),
+                produto.getNome(),
+                imagemBase64,
+                itemPedido.getQuantidade(),
+                itemPedido.getPrecoUnitario()
+        );
     }
 }

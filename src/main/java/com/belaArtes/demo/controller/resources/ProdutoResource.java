@@ -4,20 +4,29 @@ package com.belaArtes.demo.controller.resources;
 import com.belaArtes.demo.controller.services.ProdutoService;
 import com.belaArtes.demo.model.dto.ProdutoDTO;
 import com.belaArtes.demo.model.entities.Produto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.belaArtes.demo.model.dto.ProdutoDTO;
 import com.belaArtes.demo.model.dto.ProdutoResponseDTO;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/produtos")
 public class ProdutoResource {
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private final ProdutoService produtoService;
 
@@ -27,59 +36,62 @@ public class ProdutoResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<Produto>> buscarTodos() {
+    public ResponseEntity<List<ProdutoResponseDTO>> buscarTodos() {
         List<Produto> produtos = produtoService.buscarTodos();
-        return ResponseEntity.ok(produtos);
+        List<ProdutoResponseDTO> response = produtos.stream()
+                .map(this::converterEntidadeParaDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ProdutoResponseDTO> buscarPorId(@PathVariable Integer id) {
         Produto produto = produtoService.buscarPorId(id);
-        return ResponseEntity.ok(produto);
+        return ResponseEntity.ok(converterEntidadeParaDto(produto));
     }
 
-    @PostMapping
-    public ResponseEntity<Produto> criarProduto(@Valid @RequestBody Produto produto) {
-        Produto produtoSalvo = produtoService.inserir(produto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(produtoSalvo.getIdProduto())
-                .toUri();
-        return ResponseEntity.created(uri).body(produtoSalvo);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProdutoResponseDTO> criarProduto(
+            @Valid @RequestPart("dados") ProdutoDTO produtoDTO,
+            @RequestPart("imagem") MultipartFile imagem) {
+
+        ProdutoResponseDTO produtoSalvo = produtoService.salvar(produtoDTO, imagem);
+        return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvo);
+    }
+
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProdutoResponseDTO> atualizarProduto(
+            @PathVariable Integer id,
+            @Valid @RequestPart("dados") ProdutoDTO produtoDTO,
+            @RequestPart(value = "imagem", required = false) MultipartFile imagem) {
+        Produto produto = converterDtoParaEntidade(produtoDTO, imagem);
+        Produto produtoAtualizado = produtoService.atualizar(id, produto, imagem);
+        return ResponseEntity.ok(converterEntidadeParaDto(produtoAtualizado));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarProduto(@PathVariable Long id) {
+    public ResponseEntity<Void> deletarProduto(@PathVariable Integer id) {
         produtoService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDTO> atualizarProduto(
-            @PathVariable Long id,
-            @Valid @RequestBody ProdutoDTO produtoDTO) {
-
-        // 1. Converte DTO para Entidade
-        Produto produtoAtualizado = converterDtoParaEntidade(produtoDTO);
-
-        // 2. Chama o service (que ainda trabalha com entidade)
-        Produto produto = produtoService.atualizar(id, produtoAtualizado);
-
-        // 3. Converte a entidade para DTO de resposta
-        ProdutoResponseDTO responseDto = converterEntidadeParaDto(produto);
-
-        return ResponseEntity.ok(responseDto);
-    }
-
     // Métodos auxiliares:
-    private Produto converterDtoParaEntidade(ProdutoDTO dto) {
+    private Produto converterDtoParaEntidade(ProdutoDTO dto, MultipartFile imagem) {
         Produto produto = new Produto();
+
         produto.setNome(dto.getNome());
         produto.setDescricao(dto.getDescricao());
         produto.setCategoria(dto.getCategoria());
         produto.setPreco(dto.getPreco());
-        produto.setUrlFoto(dto.getUrlFoto());
         produto.setEstoque(dto.getEstoque());
+
+        try {
+            produto.setImagem(imagem.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao processar imagem", e);
+        }
+
         return produto;
     }
 
@@ -90,8 +102,8 @@ public class ProdutoResource {
                 produto.getDescricao(),
                 produto.getCategoria(),
                 produto.getPreco(),
-                produto.getUrlFoto(),
-                produto.getEstoque()
+                produto.getEstoque(),
+                produto.getImagem()
         );
     }
 }

@@ -14,11 +14,11 @@ public class ItemPedidoResponseDTO {
 
     public ItemPedidoResponseDTO(Integer id, Integer pedidoId, String pedidoStatus,
                                  LocalDateTime pedidoData, Integer produtoId,
-                                 String produtoNome, String produtoUrlFoto,
+                                 String produtoNome, String produtoImagemBase64,
                                  Integer quantidade, BigDecimal precoUnitario) {
         this.id = id;
         this.pedido = new PedidoResumoDTO(pedidoId, pedidoStatus, pedidoData);
-        this.produto = new ProdutoResumoDTO(produtoId, produtoNome, produtoUrlFoto);
+        this.produto = new ProdutoResumoDTO(produtoId, produtoNome, produtoImagemBase64);
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
         this.valorTotal = precoUnitario.multiply(BigDecimal.valueOf(quantidade));
@@ -50,18 +50,16 @@ public class ItemPedidoResponseDTO {
     public static class ProdutoResumoDTO {
         private Integer id;
         private String nome;
-        private String urlFoto;
+        private String imagemBase64;
 
-        public ProdutoResumoDTO(Integer id, String nome, String urlFoto) {
+        public ProdutoResumoDTO(Integer id, String nome, String imagemBase64) {
             this.id = id;
             this.nome = nome;
-            this.urlFoto = urlFoto;
+            this.imagemBase64 = imagemBase64;
         }
 
         public Integer getId() { return id; }
         public String getNome() { return nome; }
-        public String getUrlFoto() { return urlFoto; }
+        public String getImagemBase64() { return imagemBase64; }
     }
-
-
-    }
+}

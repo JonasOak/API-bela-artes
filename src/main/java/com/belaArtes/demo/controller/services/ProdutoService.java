@@ -2,12 +2,16 @@ package com.belaArtes.demo.controller.services;
 
 
 import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
+import com.belaArtes.demo.model.dto.ProdutoDTO;
+import com.belaArtes.demo.model.dto.ProdutoResponseDTO;
 import com.belaArtes.demo.model.entities.Produto;
 import com.belaArtes.demo.model.repositories.ProdutoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -20,32 +24,65 @@ public class ProdutoService {
     public ProdutoService(ProdutoRepository produtoRepository) {
         this.repository = produtoRepository;
     }
+
     public List<Produto> buscarTodos() {
         return repository.findAll();
     }
 
-    public Produto buscarPorId(Long id) {
+    public Produto buscarPorId(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
     }
 
-    public Produto inserir(Produto produto) {
-        validarProduto(produto);
-        return repository.save(produto);
+    public ProdutoResponseDTO salvar(ProdutoDTO dto, MultipartFile imagem) {
+        Produto produto = new Produto();
+
+        produto.setNome(dto.getNome());
+        produto.setDescricao(dto.getDescricao());
+        produto.setCategoria(dto.getCategoria());
+        produto.setPreco(dto.getPreco());
+        produto.setEstoque(dto.getEstoque());
+
+        if (imagem != null && !imagem.isEmpty()) {
+            try {
+                produto.setImagem(imagem.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao processar a imagem", e);
+            }
+        }
+
+        Produto salvo = repository.save(produto);
+
+        return new ProdutoResponseDTO(
+                salvo.getIdProduto(),
+                salvo.getNome(),
+                salvo.getDescricao(),
+                salvo.getCategoria(),
+                salvo.getPreco(),
+                salvo.getEstoque(),
+                salvo.getImagem()
+        );
     }
 
-    public void deletar(Long id) {
+    public void deletar(Integer id) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Produto com ID " + id + " não encontrado para deletar");
         }
         repository.deleteById(id);
     }
 
-    public Produto atualizar(Long id, Produto produto) {
+    public Produto atualizar(Integer id, Produto produto, MultipartFile imagem) {
         try {
             Produto produtoExistente = repository.getReferenceById(id);
             atualizarDados(produtoExistente, produto);
+
+            if (imagem != null && !imagem.isEmpty()) {
+                produtoExistente.setImagem(imagem.getBytes());
+            }
+
             return repository.save(produtoExistente);
+        } catch (IOException e) {
+            throw new RuntimeException("Falha ao processar imagem", e);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Produto com ID " + id + " não encontrado para atualização");
         }
@@ -72,9 +109,6 @@ public class ProdutoService {
         }
         if (novoProduto.getPreco() != null) {
             produtoExistente.setPreco(novoProduto.getPreco());
-        }
-        if (novoProduto.getUrlFoto() != null) {
-            produtoExistente.setUrlFoto(novoProduto.getUrlFoto());
         }
         if (novoProduto.getEstoque() != null) {
             produtoExistente.setEstoque(novoProduto.getEstoque());

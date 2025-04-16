@@ -25,8 +25,9 @@ public class Produto {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal preco;
 
-    @Column(nullable = false, length = 500)
-    private String urlFoto;
+    @Lob
+    @Column(nullable = false, columnDefinition = "LONGBLOB")
+    private byte[] imagem;
 
     @Column(nullable = false)
     private Integer estoque;
@@ -34,18 +35,22 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(int idProduto, String nome, String descricao, String categoria, BigDecimal preco, String urlFoto, Integer estoque) {
+    public Produto(int idProduto, String nome, String descricao, String categoria, BigDecimal preco, byte[] imagem, Integer estoque) {
         this.idProduto = idProduto;
         this.nome = nome;
         this.descricao = descricao;
         this.categoria = categoria;
         this.preco = preco;
-        this.urlFoto = urlFoto;
+        this.imagem = imagem;
         this.estoque = estoque;
     }
 
     public int getIdProduto() {
         return idProduto;
+    }
+
+    public void setIdProduto(int idProduto) {
+        this.idProduto = idProduto;
     }
 
     public String getNome() {
@@ -80,12 +85,12 @@ public class Produto {
         this.preco = preco;
     }
 
-    public String getUrlFoto() {
-        return urlFoto;
+    public byte[] getImagem() {
+        return imagem;
     }
 
-    public void setUrlFoto(String urlFoto) {
-        this.urlFoto = urlFoto;
+    public void setImagem(byte[] imagem) {
+        this.imagem = imagem;
     }
 
     public Integer getEstoque() {

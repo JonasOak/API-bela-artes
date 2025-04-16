@@ -1,6 +1,8 @@
 package com.belaArtes.demo.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -21,13 +23,14 @@ public class ProdutoDTO {
     @DecimalMin(value = "0.01", message = "Preço deve ser maior que zero")
     private BigDecimal preco;
 
-    @NotBlank(message = "URL da foto é obrigatória")
-    @Size(max = 500, message = "URL da foto deve ter no máximo 500 caracteres")
-    private String urlFoto;
+    //@NotNull(message = "Imagem é obrigatória")
+    //private MultipartFile imagem;
 
     @NotNull(message = "Estoque é obrigatório")
     @Min(value = 0, message = "Estoque não pode ser negativo")
     private Integer estoque;
+
+    public ProdutoDTO() {}
 
     // Getters e Setters
     public String getNome() { return nome; }
@@ -38,8 +41,8 @@ public class ProdutoDTO {
     public void setCategoria(String categoria) { this.categoria = categoria; }
     public BigDecimal getPreco() { return preco; }
     public void setPreco(BigDecimal preco) { this.preco = preco; }
-    public String getUrlFoto() { return urlFoto; }
-    public void setUrlFoto(String urlFoto) { this.urlFoto = urlFoto; }
+    //public MultipartFile getImagem() { return imagem; }
+    //public void setImagem(MultipartFile setImagem) { this.imagem = imagem; }
     public Integer getEstoque() { return estoque; }
     public void setEstoque(Integer estoque) { this.estoque = estoque; }
 }

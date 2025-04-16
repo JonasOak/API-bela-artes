@@ -55,8 +55,6 @@ public class PedidoResource {
         return ResponseEntity.created(uri).body(responseDTO);
     }
 
-
-
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deletar(@PathVariable int id) {
         pedidoService.delete(id);

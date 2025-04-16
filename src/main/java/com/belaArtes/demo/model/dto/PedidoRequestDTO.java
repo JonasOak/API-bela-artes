@@ -14,7 +14,7 @@ public class PedidoRequestDTO {
 
     public static class ItemPedidoDTO {
         @NotNull(message = "ID do produto é obrigatório")
-        private Long produtoId;
+        private Integer produtoId;
 
         @NotNull(message = "Quantidade é obrigatória")
         private Integer quantidade;
@@ -22,11 +22,11 @@ public class PedidoRequestDTO {
         @NotNull(message = "Preço unitário é obrigatório")
         private Double precoUnitario;
 
-        public Long getProdutoId() {
+        public Integer getProdutoId() {
             return produtoId;
         }
 
-        public void setProdutoId(Long produtoId) {
+        public void setProdutoId(Integer produtoId) {
             this.produtoId = produtoId;
         }
 
