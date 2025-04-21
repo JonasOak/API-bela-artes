@@ -12,7 +12,6 @@ public class UsuarioDTO {
     @NotBlank(message = "Senha é obrigatória")
     private String senhaHash;
 
-    @NotNull(message = "Cargo é obrigatório")
     private Cargo cargo;
 
     public String getEmail() {

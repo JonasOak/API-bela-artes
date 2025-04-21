@@ -2,15 +2,20 @@ package com.belaArtes.demo.controller.resources;
 
 
 import com.belaArtes.demo.controller.services.UsuarioService;
+import com.belaArtes.demo.controller.services.exceptions.EmailJaCadastradoException;
 import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
 import com.belaArtes.demo.model.dto.UsuarioDTO;
 import com.belaArtes.demo.model.entities.Usuario;
+import com.belaArtes.demo.model.entities.enums.Cargo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -19,23 +24,46 @@ import java.util.Optional;
 public class UsuarioResource {
 
     private final UsuarioService usuarioService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsuarioResource(UsuarioService usuarioService) {  // Deve ser o mesmo nome da classe
+    public UsuarioResource(UsuarioService usuarioService, BCryptPasswordEncoder passwordEncoder) {  // Deve ser o mesmo nome da classe
         this.usuarioService = usuarioService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginData) {
+        String email = loginData.get("email");
+        String senha = loginData.get("senha");
+
+        try {
+            Usuario usuario = usuarioService.buscarPorEmail(email);
+            if (!passwordEncoder.matches(senha, usuario.getSenhaHash())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta");
+            }
+
+            return ResponseEntity.ok(usuario);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não encontrado");
+        }
     }
 
     @PostMapping
     public ResponseEntity<?> criarUsuario(@Valid @RequestBody UsuarioDTO usuarioDTO) {
         try {
-            // Converte DTO para Entidade
             Usuario usuario = new Usuario();
             usuario.setEmail(usuarioDTO.getEmail());
             usuario.setSenhaHash(usuarioDTO.getSenhaHash());
-            usuario.setCargo(usuarioDTO.getCargo());
-
+            if (usuarioDTO.getCargo() == null) {
+                usuario.setCargo(Cargo.CLIENTE);
+            } else {
+                usuario.setCargo(usuarioDTO.getCargo());
+            }
             Usuario usuarioSalvo = usuarioService.inserir(usuario);
             return ResponseEntity.ok(usuarioSalvo);
+        } catch (EmailJaCadastradoException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
