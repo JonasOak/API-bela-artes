@@ -19,9 +19,9 @@ public class Pedido implements Serializable {
     @Column(name = "id_pedido")
     private int idPedido;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
-    private Cliente cliente;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
 
     @Column(nullable = false)
     private LocalDateTime dataPedido = LocalDateTime.now();
@@ -36,24 +36,28 @@ public class Pedido implements Serializable {
     public Pedido() {
     }
 
-    public Pedido(int idPedido, Cliente cliente, LocalDateTime dataPedido, StatusPedido status) {
+    public Pedido(int idPedido, Usuario usuario, LocalDateTime dataPedido, StatusPedido status, List<ItemPedido> itens) {
         this.idPedido = idPedido;
-        this.cliente = cliente;
+        this.usuario = usuario;
         this.dataPedido = dataPedido;
         this.status = status;
+        this.itens = itens;
     }
-
 
     public int getIdPedido() {
         return idPedido;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public LocalDateTime getDataPedido() {

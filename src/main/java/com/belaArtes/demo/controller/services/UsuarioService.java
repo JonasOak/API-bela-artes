@@ -70,7 +70,8 @@ public class UsuarioService {
             usuarioExistente.setEmail(novoUsuario.getEmail());
         }
         if (novoUsuario.getSenhaHash() != null) {
-            usuarioExistente.setSenhaHash(novoUsuario.getSenhaHash());
+            String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenhaHash());
+            usuarioExistente.setSenhaHash(senhaCriptografada);
         }
         if (novoUsuario.getCargo() != null) {
             usuarioExistente.setCargo(novoUsuario.getCargo());

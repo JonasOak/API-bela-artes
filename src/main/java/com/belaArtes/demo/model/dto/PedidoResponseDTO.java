@@ -7,17 +7,14 @@ import java.util.List;
 public class PedidoResponseDTO {
 
     private Integer id;
-    private ClienteResumoDTO cliente;
     private LocalDateTime dataPedido;
     private String status;
     private List<ItemPedidoResumoDTO> itens;
     private BigDecimal valorTotal;
 
-    public PedidoResponseDTO(Integer id, Integer clienteId, String clienteNome,
-                             LocalDateTime dataPedido, String status,
+    public PedidoResponseDTO(Integer id, LocalDateTime dataPedido, String status,
                              List<ItemPedidoResumoDTO> itens) {
         this.id = id;
-        this.cliente = new ClienteResumoDTO(clienteId, clienteNome);
         this.dataPedido = dataPedido;
         this.status = status;
         this.itens = itens;
@@ -31,24 +28,10 @@ public class PedidoResponseDTO {
     }
 
     public Integer getId() { return id; }
-    public ClienteResumoDTO getCliente() { return cliente; }
     public LocalDateTime getDataPedido() { return dataPedido; }
     public String getStatus() { return status; }
     public List<ItemPedidoResumoDTO> getItens() { return itens; }
     public BigDecimal getValorTotal() { return valorTotal; }
-
-    public static class ClienteResumoDTO {
-        private Integer id;
-        private String nome;
-
-        public ClienteResumoDTO(Integer id, String nome) {
-            this.id = id;
-            this.nome = nome;
-        }
-
-        public Integer getId() { return id; }
-        public String getNome() { return nome; }
-    }
 
     public static class ItemPedidoResumoDTO {
         private Integer id;
