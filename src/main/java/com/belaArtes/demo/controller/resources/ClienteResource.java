@@ -1,6 +1,7 @@
 package com.belaArtes.demo.controller.resources;
 
 
+import com.belaArtes.demo.controller.resources.exceptions.ClientException;
 import com.belaArtes.demo.controller.services.ClienteService;
 import com.belaArtes.demo.model.entities.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,17 @@ public class ClienteResource {
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> inserir(@RequestBody Cliente obj) {
-        obj = service.inserir(obj);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(obj.getIdCliente()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+    public ResponseEntity<?> inserir(@RequestBody Cliente obj) {
+        try {
+            obj = service.inserir(obj);
+            URI uri = ServletUriComponentsBuilder
+                    .fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(obj.getIdCliente()).toUri();
+            return ResponseEntity.ok().body("{\"message\": \"Cliente cadastrado\"}");
+        } catch (ClientException e) {
+            return ResponseEntity.ok().body("{\"message\": \"" + e.getMessage() + "\"}");
+        }
+
     }
 
     @DeleteMapping(value = "/{id}")
@@ -50,4 +56,6 @@ public class ClienteResource {
         obj = service.atualizar(id, obj);
         return ResponseEntity.ok().body(obj);
     }
+
+
 }
