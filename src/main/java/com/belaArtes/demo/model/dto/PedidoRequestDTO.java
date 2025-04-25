@@ -6,8 +6,8 @@ import java.util.List;
 
 public class PedidoRequestDTO {
 
-    @NotNull(message = "ID do cliente é obrigatório")
-    private Integer clienteId;
+    @NotNull(message = "ID do usuário é obrigatório")
+    private Integer usuarioId;
 
     @NotNull(message = "A lista de itens é obrigatória")
     private List<ItemPedidoDTO> itens;
@@ -47,12 +47,12 @@ public class PedidoRequestDTO {
         }
     }
 
-    public Integer getClienteId() {
-        return clienteId;
+    public Integer getUsuarioId() {
+        return usuarioId;
     }
 
-    public void setClienteId(Integer clienteId) {
-        this.clienteId = clienteId;
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public List<ItemPedidoDTO> getItens() {

@@ -12,6 +12,10 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idCliente;
 
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id_usuario", nullable = false, unique = true)
+    private Usuario usuario;
+
     @Column(nullable = false, length = 255)
     private String nome;
 
@@ -39,8 +43,9 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(int idCliente, String nome, String cpf, String telefone, String logradouro, String numero, String bairro, String cep, String complemento) {
+    public Cliente(int idCliente, Usuario usuario, String nome, String cpf, String telefone, String logradouro, String numero, String bairro, String cep, String complemento) {
         this.idCliente = idCliente;
+        this.usuario = usuario;
         this.nome = nome;
         this.cpf = cpf;
         this.telefone = telefone;
@@ -53,6 +58,18 @@ public class Cliente {
 
     public int getIdCliente() {
         return idCliente;
+    }
+
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getNome() {
