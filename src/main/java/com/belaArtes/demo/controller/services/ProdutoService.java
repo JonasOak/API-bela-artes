@@ -88,6 +88,7 @@ public class ProdutoService {
         }
     }
 
+
     private void validarProduto(Produto produto) {
         if (produto.getPreco().compareTo(BigDecimal.ZERO) <= 0) {
             throw new ResourceNotFoundException("Preço deve ser maior que zero");
