@@ -88,21 +88,9 @@ public class ClienteService {
         }
     }
 
-//
-//    /**
-//     * salvar cliente
-//     *
-//     * @author Eduardo
-//     * @since 1.0
-//     */
-//    public Cliente register(Cliente client) throws ClientException {
-//        if (checkDate(client)) {
-//            if (usuarioService.inserir(client.getUsuario()) != null) {
-//                return repository.save(client);
-//            }
-//        }
-//        return null;
-//    }
+    public Cliente getUserClientId(int id) {
+        return repository.findByUsuario_IdUsuario(id);
+    }
 
     /**
      * @param cpf Recebe valor de um cpf
@@ -127,6 +115,7 @@ public class ClienteService {
     protected Cliente findByClientId(int id) {
         return repository.findByIdCliente(id);
     }
+
 
     /**
      * Verificar dados no banco de dados do cliente

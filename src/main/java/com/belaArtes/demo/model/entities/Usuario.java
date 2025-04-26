@@ -61,9 +61,5 @@ public class Usuario {
         return Objects.hashCode(idUsuario);
     }
 
-    public static void main(String[] args) {
-        Usuario u = new Usuario();
-        u.setSenhaHash("123456");
-        System.out.println(u);
-    }
+
 }

@@ -2,13 +2,16 @@ package com.belaArtes.demo.model.entities;
 
 import com.belaArtes.demo.model.entities.enums.StatusPedido;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-
+@Getter
+@Setter
 @Entity
 @Table(name = "Pedido")
 public class Pedido implements Serializable {
@@ -44,45 +47,7 @@ public class Pedido implements Serializable {
         this.itens = itens;
     }
 
-    public int getIdPedido() {
-        return idPedido;
-    }
 
-    public void setIdPedido(int idPedido) {
-        this.idPedido = idPedido;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public LocalDateTime getDataPedido() {
-        return dataPedido;
-    }
-
-    public void setDataPedido(LocalDateTime dataPedido) {
-        this.dataPedido = dataPedido;
-    }
-
-    public StatusPedido getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusPedido status) {
-        this.status = status;
-    }
-
-    public List<ItemPedido> getItens() {
-        return itens;
-    }
-
-    public void setItens(List<ItemPedido> itens) {
-        this.itens = itens;
-    }
 
     @Override
     public boolean equals(Object o) {
