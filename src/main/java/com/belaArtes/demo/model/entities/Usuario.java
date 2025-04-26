@@ -2,9 +2,12 @@ package com.belaArtes.demo.model.entities;
 
 import com.belaArtes.demo.model.entities.enums.Cargo;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
-
+@Getter
+@Setter
 @Entity
 @Table(name = "Usuario")
 public class Usuario {
@@ -18,6 +21,7 @@ public class Usuario {
 
     @Column(nullable = false, length = 255)
     private String senhaHash;
+
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -33,33 +37,17 @@ public class Usuario {
         this.cargo = cargo;
     }
 
-    public int getIdUsuario() {
-        return idUsuario;
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "idUsuario=" + idUsuario +
+                ", email='" + email + '\'' +
+                ", senhaHash='" + senhaHash + '\'' +
+                ", cargo=" + cargo +
+                '}';
     }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getSenhaHash() {
-        return senhaHash;
-    }
-
-    public void setSenhaHash(String senhaHash) {
-        this.senhaHash = senhaHash;
-    }
-
-    public Cargo getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(Cargo cargo) {
-        this.cargo = cargo;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -71,5 +59,11 @@ public class Usuario {
     @Override
     public int hashCode() {
         return Objects.hashCode(idUsuario);
+    }
+
+    public static void main(String[] args) {
+        Usuario u = new Usuario();
+        u.setSenhaHash("123456");
+        System.out.println(u);
     }
 }

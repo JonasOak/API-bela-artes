@@ -1,5 +1,6 @@
 package com.belaArtes.demo.controller.services;
 
+import com.belaArtes.demo.controller.resources.exceptions.ClientException;
 import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
 import com.belaArtes.demo.model.entities.Cliente;
 import com.belaArtes.demo.model.repositories.ClienteRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,12 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository repository;
+
+    /**
+     * Injetando usuarioService
+     */
+    @Autowired
+    private UsuarioService usuarioService;
 
     public List<Cliente> buscarTodos() {
         return repository.findAll();
@@ -27,8 +35,13 @@ public class ClienteService {
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente com ID " + id + " não encontrado"));
     }
 
-    public Cliente inserir(Cliente obj) {
-        return repository.save(obj);
+    public Cliente inserir(Cliente obj) throws ClientException {
+        if(checkDate(obj)){
+            if (usuarioService.inserir(obj.getUsuario()) != null) {
+                return repository.save(obj);
+            }
+        }
+        throw new ClientException("Erro desconhecido");
     }
 
     public void delete(int id) {
@@ -73,5 +86,64 @@ public class ClienteService {
         if (novoCliente.getComplemento() != null) {
             clienteExistente.setComplemento(novoCliente.getComplemento());
         }
+    }
+
+//
+//    /**
+//     * salvar cliente
+//     *
+//     * @author Eduardo
+//     * @since 1.0
+//     */
+//    public Cliente register(Cliente client) throws ClientException {
+//        if (checkDate(client)) {
+//            if (usuarioService.inserir(client.getUsuario()) != null) {
+//                return repository.save(client);
+//            }
+//        }
+//        return null;
+//    }
+
+    /**
+     * @param cpf Recebe valor de um cpf
+     * @return Retornar dados do cliente se existir
+     */
+    protected Cliente findByCpf(String cpf) {
+        return repository.findByCpf(cpf);
+    }
+
+    /**
+     * @param email Recebe valor de um email
+     * @return Retornar dados do cliente se existir
+     */
+    protected Cliente findByEmail(String email) {
+        return repository.findByUsuario_Email(email);
+    }
+
+    /**
+     * @param id Recebe valor de um email
+     * @return Retornar dados do cliente se existir
+     */
+    protected Cliente findByClientId(int id) {
+        return repository.findByIdCliente(id);
+    }
+
+    /**
+     * Verificar dados no banco de dados do cliente
+     *
+     * @author Eduardo
+     * @since 1.0
+     */
+    protected boolean checkDate(Cliente checkCliente) throws ClientException {
+        if (findByClientId(checkCliente.getIdCliente()) != null) {
+            throw new ClientException("Este ID já está em uso. Tente novamente mais tarde.");
+        }
+        if (findByCpf(checkCliente.getCpf()) != null) {
+            throw new ClientException("Este CPF já está cadastrado. Tente novamente com um CPF diferente.");
+        }
+        if (findByCpf(checkCliente.getCpf()) != null) {
+            throw new ClientException("E-mail duplicado: o endereço informado já existe no sistema.");
+        }
+        return true;
     }
 }

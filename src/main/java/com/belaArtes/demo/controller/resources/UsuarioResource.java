@@ -51,6 +51,7 @@ public class UsuarioResource {
 
     @PostMapping
     public ResponseEntity<?> criarUsuario(@Valid @RequestBody UsuarioDTO usuarioDTO) {
+        System.out.println("Testing user " +usuarioDTO);
         try {
             Usuario usuario = new Usuario();
             usuario.setEmail(usuarioDTO.getEmail());
