@@ -1,10 +1,12 @@
 package com.belaArtes.demo.controller.resources;
 
 
+import com.belaArtes.demo.controller.services.ClienteService;
 import com.belaArtes.demo.controller.services.UsuarioService;
 import com.belaArtes.demo.controller.services.exceptions.EmailJaCadastradoException;
 import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
 import com.belaArtes.demo.model.dto.UsuarioDTO;
+import com.belaArtes.demo.model.entities.Cliente;
 import com.belaArtes.demo.model.entities.Usuario;
 import com.belaArtes.demo.model.entities.enums.Cargo;
 import jakarta.validation.Valid;
@@ -22,9 +24,12 @@ import java.util.Optional;
 @RequestMapping(value = "/usuarios")
 
 public class UsuarioResource {
+    @Autowired
+    private ClienteService clienteService;
 
     private final UsuarioService usuarioService;
     private final BCryptPasswordEncoder passwordEncoder;
+
 
     @Autowired
     public UsuarioResource(UsuarioService usuarioService, BCryptPasswordEncoder passwordEncoder) {  // Deve ser o mesmo nome da classe
@@ -42,8 +47,8 @@ public class UsuarioResource {
             if (!passwordEncoder.matches(senha, usuario.getSenhaHash())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta");
             }
-
-            return ResponseEntity.ok(usuario);
+            // Retorna os dados do cliente para serem armazenados no dispositivo Android
+            return ResponseEntity.ok(clienteService.getUserClientId(usuario.getIdUsuario()));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não encontrado");
         }
@@ -51,7 +56,6 @@ public class UsuarioResource {
 
     @PostMapping
     public ResponseEntity<?> criarUsuario(@Valid @RequestBody UsuarioDTO usuarioDTO) {
-        System.out.println("Testing user " +usuarioDTO);
         try {
             Usuario usuario = new Usuario();
             usuario.setEmail(usuarioDTO.getEmail());
@@ -77,7 +81,7 @@ public class UsuarioResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarPorId(@PathVariable("id") int id)  {
+    public ResponseEntity<Usuario> buscarPorId(@PathVariable("id") int id) {
         Usuario usuario = usuarioService.buscarPorId(id);
         return ResponseEntity.ok(usuario);
     }
