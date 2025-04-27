@@ -44,13 +44,17 @@ public class PedidoService {
     public PedidoResponseDTO buscarPedidoCompleto(Integer id) {
         Pedido pedido = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado"));
-
         return new PedidoResponseDTO(
                 pedido.getIdPedido(),
                 pedido.getDataPedido(),
-                pedido.getStatus().toString(),
-                converterItensParaDTO(pedido.getItens())
-        );
+                pedido.getStatus().toString(), null);
+
+//        return new PedidoResponseDTO(
+//                pedido.getIdPedido(),
+//                pedido.getDataPedido(),
+//                pedido.getStatus().toString(),
+//                converterItensParaDTO(pedido.getItens())
+//        );
     }
 
     private List<PedidoResponseDTO.ItemPedidoResumoDTO> converterItensParaDTO(List<ItemPedido> itens) {
@@ -72,7 +76,7 @@ public Pedido inserirPedidoDTO(PedidoRequestDTO dto) {
             .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
     Pedido pedido = new Pedido();
-    pedido.setUsuario(usuario);
+    //pedido.setUsuario(usuario);
     pedido.setStatus(StatusPedido.PENDENTE);
 
     List<ItemPedido> itens = dto.getItens().stream().map(itemDTO -> {
@@ -86,7 +90,7 @@ public Pedido inserirPedidoDTO(PedidoRequestDTO dto) {
         item.setPrecoUnitario(produto.getPreco());
         return item;
     }).collect(Collectors.toList());
-    pedido.setItens(itens);
+   // pedido.setItens(itens);
     return repository.save(pedido);
 }
 

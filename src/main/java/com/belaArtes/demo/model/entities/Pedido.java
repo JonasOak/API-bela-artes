@@ -1,6 +1,7 @@
 package com.belaArtes.demo.model.entities;
 
 import com.belaArtes.demo.model.entities.enums.StatusPedido;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,9 +23,8 @@ public class Pedido implements Serializable {
     @Column(name = "id_pedido")
     private int idPedido;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
+    private int idClient;
+    private int idProduct;
 
     @Column(nullable = false)
     private LocalDateTime dataPedido = LocalDateTime.now();
@@ -33,18 +33,34 @@ public class Pedido implements Serializable {
     @Column(nullable = false)
     private StatusPedido status = StatusPedido.PENDENTE;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-    private List<ItemPedido> itens;
+
+
+//    @ManyToOne(optional = false)
+//    @JoinColumn(name = "id_usuario", nullable = false)
+//    private Usuario usuario;
+//    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+//    private List<ItemPedido> itens;
+
 
     public Pedido() {
     }
 
     public Pedido(int idPedido, Usuario usuario, LocalDateTime dataPedido, StatusPedido status, List<ItemPedido> itens) {
         this.idPedido = idPedido;
-        this.usuario = usuario;
+       // this.usuario = usuario;
         this.dataPedido = dataPedido;
         this.status = status;
-        this.itens = itens;
+       // this.itens = itens;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "idPedido=" + idPedido +
+                ", dataPedido=" + dataPedido +
+                ", status=" + status +
+                ", idClient=" + idClient +
+                '}';
     }
 
 
