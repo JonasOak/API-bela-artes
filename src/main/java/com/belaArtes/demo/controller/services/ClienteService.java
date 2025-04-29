@@ -104,8 +104,12 @@ public class ClienteService {
      * @param email Recebe valor de um email
      * @return Retornar dados do cliente se existir
      */
-    protected Cliente findByEmail(String email) {
-        return repository.findByUsuario_Email(email);
+    public Cliente findByEmail(String email) throws ClientException {
+        Cliente searchEmail = repository.findByUsuario_Email(email);
+        if (searchEmail != null) {
+            return searchEmail;
+        }
+        throw new ClientException("Email não encontrado");
     }
 
     /**
