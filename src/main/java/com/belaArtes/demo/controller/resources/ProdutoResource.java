@@ -70,6 +70,17 @@ public class ProdutoResource {
         return ResponseEntity.ok(converterEntidadeParaDto(produtoAtualizado));
     }
 
+
+    @PutMapping("/update")
+    public ResponseEntity<ProdutoResponseDTO> updateProduct(@RequestBody Produto produtoDTO) {
+        if (produtoService.update(produtoDTO) != null) {
+
+            return ResponseEntity.ok().body(converterEntidadeParaDto(produtoDTO));
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarProduto(@PathVariable Integer id) {
         produtoService.deletar(id);
