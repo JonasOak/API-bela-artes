@@ -88,6 +88,17 @@ public class ProdutoService {
         }
     }
 
+    // update product
+    public Produto update(Produto produto) {
+        Produto produtoExistente = repository.getReferenceById(produto.getIdProduto());
+        if (produtoExistente != null) {
+            return repository.save(produto);
+        }
+        return null;
+
+    }
+
+
     private void validarProduto(Produto produto) {
         if (produto.getPreco().compareTo(BigDecimal.ZERO) <= 0) {
             throw new ResourceNotFoundException("Preço deve ser maior que zero");
