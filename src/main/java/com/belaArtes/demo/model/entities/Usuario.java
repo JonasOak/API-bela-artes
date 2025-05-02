@@ -22,12 +22,14 @@ public class Usuario {
     @Column(nullable = false, length = 255)
     private String senhaHash;
 
+    private boolean isActive;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Cargo cargo;
 
     public Usuario() {
+        this.isActive = true;
     }
 
     public Usuario(int idUsuario, String email, String senhaHash, Cargo cargo) {
@@ -35,6 +37,7 @@ public class Usuario {
         this.email = email;
         this.senhaHash = senhaHash;
         this.cargo = cargo;
+        this.isActive = true;
     }
 
     @Override
