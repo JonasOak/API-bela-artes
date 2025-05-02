@@ -49,10 +49,11 @@ public class UsuarioService {
     }
 
     public void deletar(int id) {
-        if (!repository.existsById(id)) {
+        Usuario searchUser = repository.findUsuarioByIdUsuario(id);
+        if (searchUser == null) {
             throw new ResourceNotFoundException("Usuário com ID " + id + " não encontrado para deletar");
         }
-        repository.deleteById(id);
+        repository.deleteById(searchUser.getIdUsuario());
     }
 
     public Usuario atualizar(int id, Usuario obj) {
