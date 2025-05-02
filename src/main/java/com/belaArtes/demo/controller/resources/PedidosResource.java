@@ -26,7 +26,7 @@ public class PedidosResource {
     public ResponseEntity<?> requestOrder(@RequestBody List<Pedido> pedido) {
         try {
             if (service.createOrderList(pedido) != null) {
-                return ResponseEntity.ok().body("{\"message\": \"Produto solicitado!\"}");
+                return ResponseEntity.ok("Pedido cadastrado com sucesso");
             }
         } catch (ClientException | PedidoException e) {
             return ResponseEntity.badRequest().body("{\"message\": \"" + e.getMessage() + "\"}");
