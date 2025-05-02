@@ -79,6 +79,14 @@ public class UsuarioService {
         }
     }
 
+    public void disableAccount(Integer id) {
+        Usuario searchUser = repository.findUsuarioByIdUsuario(id);
+        if(searchUser != null) {
+            searchUser.setActive(false);
+             repository.save(searchUser);
+        }
+    }
+
     public boolean existePorEmail(String email) {
         return repository.existsByEmail(email);
     }

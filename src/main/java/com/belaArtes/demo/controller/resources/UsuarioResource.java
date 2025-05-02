@@ -48,6 +48,9 @@ public class UsuarioResource {
             if (!passwordEncoder.matches(senha, usuario.getSenhaHash())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta");
             }
+            if(!usuario.isActive()){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Conta desativada");
+            }
             // Retorna os dados do cliente para serem armazenados no dispositivo Android
             return ResponseEntity.ok(clienteService.getUserClientId(usuario.getIdUsuario()));
         } catch (ResourceNotFoundException e) {
@@ -106,6 +109,13 @@ public class UsuarioResource {
         usuarioService.deletar(id);
         return ResponseEntity.ok(Map.of("mensagem", "Conta excluída com sucesso"));
     }
+
+    @PostMapping("/disable/{id}")
+    public ResponseEntity<?> disableAccount(@PathVariable("id") Integer id) {
+        usuarioService.disableAccount(id);
+        return ResponseEntity.ok(Map.of("mensagem", "Conta desativada com sucesso"));
+    }
+
 
     @GetMapping("/email/{email}")
     public ResponseEntity<Usuario> buscarPorEmail(@PathVariable String email) {
