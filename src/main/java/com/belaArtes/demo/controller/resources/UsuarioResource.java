@@ -10,6 +10,7 @@ import com.belaArtes.demo.model.entities.Cliente;
 import com.belaArtes.demo.model.entities.Usuario;
 import com.belaArtes.demo.model.entities.enums.Cargo;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -100,9 +101,10 @@ public class UsuarioResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarUsuario(@PathVariable Integer id) {
-        usuarioService.deletar(id); // Já lança a exceção se não existir
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Map<String, String>> deletarUsuario(@PathVariable("id") Integer id) {
+        clienteService.delete(id);
+        usuarioService.deletar(id);
+        return ResponseEntity.ok(Map.of("mensagem", "Conta excluída com sucesso"));
     }
 
     @GetMapping("/email/{email}")
