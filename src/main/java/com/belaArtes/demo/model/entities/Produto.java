@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Objects;
 @Getter
 @Setter
@@ -48,6 +49,27 @@ public class Produto {
         this.estoque = estoque;
     }
 
+    public Produto(String nome, String descricao, String categoria, BigDecimal preco, byte[] imagem, Integer estoque) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.categoria = categoria;
+        this.preco = preco;
+        this.imagem = imagem;
+        this.estoque = estoque;
+    }
+
+    @Override
+    public String toString() {
+        return "Produto{" +
+                "idProduto=" + idProduto +
+                ", nome='" + nome + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", categoria='" + categoria + '\'' +
+                ", preco=" + preco +
+                ", imagem=" + Arrays.toString(imagem) +
+                ", estoque=" + estoque +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {
