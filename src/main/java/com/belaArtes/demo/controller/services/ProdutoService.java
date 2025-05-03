@@ -64,6 +64,10 @@ public class ProdutoService {
         );
     }
 
+    public Produto saveProduct(Produto dto) {
+        return repository.save(dto);
+    }
+
     public void deletar(Integer id) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Produto com ID " + id + " não encontrado para deletar");

@@ -4,6 +4,7 @@ package com.belaArtes.demo.controller.resources;
 import com.belaArtes.demo.controller.services.ProdutoService;
 import com.belaArtes.demo.model.dto.ProdutoDTO;
 import com.belaArtes.demo.model.entities.Produto;
+import com.belaArtes.demo.model.util.DtoUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +19,22 @@ import com.belaArtes.demo.model.dto.ProdutoResponseDTO;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/produtos")
-public class ProdutoResource {
+public class ProdutoResource  extends DtoUtil {
 
     @Autowired
     private ObjectMapper objectMapper;
 
     private final ProdutoService produtoService;
+
+
+
 
     @Autowired
     public ProdutoResource(ProdutoService produtoService) {
@@ -57,6 +63,11 @@ public class ProdutoResource {
 
         ProdutoResponseDTO produtoSalvo = produtoService.salvar(produtoDTO, imagem);
         return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvo);
+    }
+    @PostMapping("/criar")
+    public ResponseEntity<Produto> saveProduct(@RequestBody ProdutoDTO produto) {
+        Produto produtoConvertido = converteParaEntidade(produto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.saveProduct(produtoConvertido));
     }
 
 

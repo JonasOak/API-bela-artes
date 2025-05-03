@@ -2,10 +2,13 @@ package com.belaArtes.demo.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-
+@Getter
+@Setter
 public class ProdutoDTO {
 
     @NotBlank(message = "Nome é obrigatório")
@@ -25,24 +28,22 @@ public class ProdutoDTO {
 
     //@NotNull(message = "Imagem é obrigatória")
     //private MultipartFile imagem;
-
+    private String imagem;
     @NotNull(message = "Estoque é obrigatório")
     @Min(value = 0, message = "Estoque não pode ser negativo")
     private Integer estoque;
 
     public ProdutoDTO() {}
 
-    // Getters e Setters
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
-    public String getCategoria() { return categoria; }
-    public void setCategoria(String categoria) { this.categoria = categoria; }
-    public BigDecimal getPreco() { return preco; }
-    public void setPreco(BigDecimal preco) { this.preco = preco; }
-    //public MultipartFile getImagem() { return imagem; }
-    //public void setImagem(MultipartFile setImagem) { this.imagem = imagem; }
-    public Integer getEstoque() { return estoque; }
-    public void setEstoque(Integer estoque) { this.estoque = estoque; }
+    @Override
+    public String toString() {
+        return "ProdutoDTO{" +
+                "nome='" + nome + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", categoria='" + categoria + '\'' +
+                ", preco=" + preco +
+                ", imagem='" + imagem + '\'' +
+                ", estoque=" + estoque +
+                '}';
+    }
 }
