@@ -26,14 +26,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/produtos")
-public class ProdutoResource  extends DtoUtil {
+public class ProdutoResource extends DtoUtil {
 
     @Autowired
     private ObjectMapper objectMapper;
 
     private final ProdutoService produtoService;
-
-
 
 
     @Autowired
@@ -64,11 +62,6 @@ public class ProdutoResource  extends DtoUtil {
         ProdutoResponseDTO produtoSalvo = produtoService.salvar(produtoDTO, imagem);
         return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvo);
     }
-    @PostMapping("/criar")
-    public ResponseEntity<Produto> saveProduct(@RequestBody ProdutoDTO produto) {
-        Produto produtoConvertido = converteParaEntidade(produto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.saveProduct(produtoConvertido));
-    }
 
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -82,14 +75,21 @@ public class ProdutoResource  extends DtoUtil {
     }
 
 
+    @PostMapping("/criar")
+    public ResponseEntity<Produto> saveProduct(@RequestBody ProdutoDTO produto) {
+        Produto produtoConvertido = converteParaEntidade(produto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.saveProduct(produtoConvertido));
+    }
+
+
     @PutMapping("/update")
-    public ResponseEntity<ProdutoResponseDTO> updateProduct(@RequestBody Produto produtoDTO) {
-        if (produtoService.update(produtoDTO) != null) {
+    public ResponseEntity<Produto> updateProduct(@RequestBody ProdutoDTO produtoDTO) {
+        System.out.println("ID: " + produtoDTO.getIdProduto());
+        Produto updateProduct = converteParaEntidade(produtoDTO);
+        updateProduct.setIdProduto(produtoDTO.getIdProduto());
+        produtoService.update(updateProduct);
+        return ResponseEntity.ok().body(converteParaEntidade(produtoDTO));
 
-            return ResponseEntity.ok().body(converterEntidadeParaDto(produtoDTO));
-        }
-
-        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class ProdutoDTO {
+    private int idProduto;
 
     @NotBlank(message = "Nome é obrigatório")
     @Size(max = 255, message = "Nome deve ter no máximo 255 caracteres")
