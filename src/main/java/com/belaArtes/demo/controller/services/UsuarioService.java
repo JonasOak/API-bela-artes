@@ -1,6 +1,7 @@
 package com.belaArtes.demo.controller.services;
 
 
+import com.belaArtes.demo.controller.resources.exceptions.ClientException;
 import com.belaArtes.demo.controller.services.exceptions.EmailJaCadastradoException;
 import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
 import com.belaArtes.demo.model.entities.Usuario;
@@ -77,6 +78,14 @@ public class UsuarioService {
         if (novoUsuario.getCargo() != null) {
             usuarioExistente.setCargo(novoUsuario.getCargo());
         }
+    }
+
+    public void updateUser(Usuario user) throws ClientException {
+        Usuario searchUser = repository.findUsuarioByIdUsuario(user.getIdUsuario());
+        if(searchUser == null){
+            throw new ClientException("Usuário não encontrado");
+        }
+        repository.save(user);
     }
 
     public void disableAccount(Integer id) {
