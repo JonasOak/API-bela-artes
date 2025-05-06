@@ -34,9 +34,12 @@ public class ProdutoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
     }
 
+    public Produto findByProductId(Integer id) {
+        return repository.findByIdProduto(id);
+    }
+
     public ProdutoResponseDTO salvar(ProdutoDTO dto, MultipartFile imagem) {
         Produto produto = new Produto();
-
         produto.setNome(dto.getNome());
         produto.setDescricao(dto.getDescricao());
         produto.setCategoria(dto.getCategoria());

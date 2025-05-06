@@ -84,7 +84,6 @@ public class ProdutoResource extends DtoUtil {
 
     @PutMapping("/update")
     public ResponseEntity<Produto> updateProduct(@RequestBody ProdutoDTO produtoDTO) {
-        System.out.println("ID: " + produtoDTO.getIdProduto());
         Produto updateProduct = converteParaEntidade(produtoDTO);
         updateProduct.setIdProduto(produtoDTO.getIdProduto());
         produtoService.update(updateProduct);
