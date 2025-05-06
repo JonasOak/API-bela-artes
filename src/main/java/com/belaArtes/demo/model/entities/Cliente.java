@@ -1,5 +1,6 @@
 package com.belaArtes.demo.model.entities;
 
+import com.belaArtes.demo.model.util.JasyptCrypto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,9 +23,11 @@ public class Cliente {
     @Column(nullable = false, length = 255)
     private String nome;
 
+    @Convert(converter = JasyptCrypto.class)
     @Column(nullable = false, unique = true, length = 14)
     private String cpf;
 
+    @Convert(converter = JasyptCrypto.class)
     @Column(length = 20)
     private String telefone;
 

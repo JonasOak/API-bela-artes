@@ -38,6 +38,7 @@ public class ClienteResource {
             URI uri = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{id}")
                     .buildAndExpand(obj.getIdCliente()).toUri();
+            System.out.println("Cliente inserido: " + obj);
             return ResponseEntity.ok().body("{\"message\": \"Cliente cadastrado\"}");
         } catch (ClientException e) {
             return ResponseEntity.ok().body("{\"message\": \"" + e.getMessage() + "\"}");
