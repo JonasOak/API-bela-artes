@@ -1,14 +1,18 @@
 package com.belaArtes.demo.model.entities;
 
 import com.belaArtes.demo.model.entities.enums.StatusPedido;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-
+@Getter
+@Setter
 @Entity
 @Table(name = "Pedido")
 public class Pedido implements Serializable {
@@ -19,9 +23,8 @@ public class Pedido implements Serializable {
     @Column(name = "id_pedido")
     private int idPedido;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
-    private Cliente cliente;
+    private int idClient;
+    private int idProduct;
 
     @Column(nullable = false)
     private LocalDateTime dataPedido = LocalDateTime.now();
@@ -30,30 +33,48 @@ public class Pedido implements Serializable {
     @Column(nullable = false)
     private StatusPedido status = StatusPedido.PENDENTE;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-    private List<ItemPedido> itens;
+
+
+//    @ManyToOne(optional = false)
+//    @JoinColumn(name = "id_usuario", nullable = false)
+//    private Usuario usuario;
+//    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+//    private List<ItemPedido> itens;
+
 
     public Pedido() {
     }
 
-    public Pedido(int idPedido, Cliente cliente, LocalDateTime dataPedido, StatusPedido status) {
+    public Pedido(int idPedido, Usuario usuario, LocalDateTime dataPedido, StatusPedido status, List<ItemPedido> itens) {
         this.idPedido = idPedido;
-        this.cliente = cliente;
+       // this.usuario = usuario;
         this.dataPedido = dataPedido;
         this.status = status;
+       // this.itens = itens;
     }
-
 
     public int getIdPedido() {
         return idPedido;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public int getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
+    }
+
+    public int getIdProduct() {
+        return idProduct;
+    }
+
+    public void setIdProduct(int idProduct) {
+        this.idProduct = idProduct;
     }
 
     public LocalDateTime getDataPedido() {
@@ -72,13 +93,17 @@ public class Pedido implements Serializable {
         this.status = status;
     }
 
-    public List<ItemPedido> getItens() {
-        return itens;
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "idPedido=" + idPedido +
+                ", dataPedido=" + dataPedido +
+                ", status=" + status +
+                ", idClient=" + idClient +
+                '}';
     }
 
-    public void setItens(List<ItemPedido> itens) {
-        this.itens = itens;
-    }
+
 
     @Override
     public boolean equals(Object o) {

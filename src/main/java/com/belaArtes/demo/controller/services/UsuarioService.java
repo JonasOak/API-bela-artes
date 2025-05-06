@@ -1,11 +1,13 @@
 package com.belaArtes.demo.controller.services;
 
 
+import com.belaArtes.demo.controller.services.exceptions.EmailJaCadastradoException;
 import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
 import com.belaArtes.demo.model.entities.Usuario;
 import com.belaArtes.demo.model.repositories.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,10 +17,12 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder) {
         this.repository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Usuario> buscarTodos() {
@@ -36,30 +40,20 @@ public class UsuarioService {
     }
 
     public Usuario inserir(Usuario obj) {
-        if (obj.getEmail() == null || obj.getEmail().isBlank()) {
-            throw new ResourceNotFoundException("E-mail não pode ser vazio");
-        }
-
         if (repository.existsByEmail(obj.getEmail())) {
-            throw new ResourceNotFoundException("E-mail já cadastrado");
+            throw new EmailJaCadastradoException(obj.getEmail());
         }
-
-        if (obj.getSenhaHash() == null || obj.getSenhaHash().isBlank()) {
-            throw new ResourceNotFoundException("Senha não pode ser vazia");
-        }
-
-        if (obj.getCargo() == null) {
-            throw new ResourceNotFoundException("Cargo não pode ser nulo");
-        }
-
+        String senhaCriptografada = passwordEncoder.encode(obj.getSenhaHash());
+        obj.setSenhaHash(senhaCriptografada);
         return repository.save(obj);
     }
 
     public void deletar(int id) {
-        if (!repository.existsById(id)) {
+        Usuario searchUser = repository.findUsuarioByIdUsuario(id);
+        if (searchUser == null) {
             throw new ResourceNotFoundException("Usuário com ID " + id + " não encontrado para deletar");
         }
-        repository.deleteById(id);
+        repository.deleteById(searchUser.getIdUsuario());
     }
 
     public Usuario atualizar(int id, Usuario obj) {
@@ -77,10 +71,19 @@ public class UsuarioService {
             usuarioExistente.setEmail(novoUsuario.getEmail());
         }
         if (novoUsuario.getSenhaHash() != null) {
-            usuarioExistente.setSenhaHash(novoUsuario.getSenhaHash());
+            String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenhaHash());
+            usuarioExistente.setSenhaHash(senhaCriptografada);
         }
         if (novoUsuario.getCargo() != null) {
             usuarioExistente.setCargo(novoUsuario.getCargo());
+        }
+    }
+
+    public void disableAccount(Integer id) {
+        Usuario searchUser = repository.findUsuarioByIdUsuario(id);
+        if(searchUser != null) {
+            searchUser.setActive(false);
+             repository.save(searchUser);
         }
     }
 

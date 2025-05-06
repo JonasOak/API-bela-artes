@@ -34,9 +34,12 @@ public class ProdutoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
     }
 
+    public Produto findByProductId(Integer id) {
+        return repository.findByIdProduto(id);
+    }
+
     public ProdutoResponseDTO salvar(ProdutoDTO dto, MultipartFile imagem) {
         Produto produto = new Produto();
-
         produto.setNome(dto.getNome());
         produto.setDescricao(dto.getDescricao());
         produto.setCategoria(dto.getCategoria());
@@ -64,6 +67,10 @@ public class ProdutoService {
         );
     }
 
+    public Produto saveProduct(Produto dto) {
+        return repository.save(dto);
+    }
+
     public void deletar(Integer id) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Produto com ID " + id + " não encontrado para deletar");
@@ -87,6 +94,17 @@ public class ProdutoService {
             throw new ResourceNotFoundException("Produto com ID " + id + " não encontrado para atualização");
         }
     }
+
+    // update product
+    public Produto update(Produto produto) {
+        Produto produtoExistente = repository.getReferenceById(produto.getIdProduto());
+        if (produtoExistente != null) {
+            return repository.save(produto);
+        }
+        return null;
+
+    }
+
 
     private void validarProduto(Produto produto) {
         if (produto.getPreco().compareTo(BigDecimal.ZERO) <= 0) {

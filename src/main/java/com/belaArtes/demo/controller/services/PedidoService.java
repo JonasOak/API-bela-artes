@@ -3,14 +3,12 @@ package com.belaArtes.demo.controller.services;
 import com.belaArtes.demo.controller.services.exceptions.ResourceNotFoundException;
 import com.belaArtes.demo.model.dto.PedidoRequestDTO;
 import com.belaArtes.demo.model.dto.PedidoResponseDTO;
-import com.belaArtes.demo.model.entities.Cliente;
-import com.belaArtes.demo.model.entities.ItemPedido;
-import com.belaArtes.demo.model.entities.Pedido;
-import com.belaArtes.demo.model.entities.Produto;
+import com.belaArtes.demo.model.entities.*;
 import com.belaArtes.demo.model.entities.enums.StatusPedido;
 import com.belaArtes.demo.model.repositories.ClienteRepository;
 import com.belaArtes.demo.model.repositories.PedidoRepository;
 import com.belaArtes.demo.model.repositories.ProdutoRepository;
+import com.belaArtes.demo.model.repositories.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +27,7 @@ public class PedidoService {
     private PedidoRepository repository;
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private ProdutoRepository produtoRepository;
@@ -46,15 +44,17 @@ public class PedidoService {
     public PedidoResponseDTO buscarPedidoCompleto(Integer id) {
         Pedido pedido = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado"));
-
         return new PedidoResponseDTO(
                 pedido.getIdPedido(),
-                pedido.getCliente().getIdCliente(),
-                pedido.getCliente().getNome(),
                 pedido.getDataPedido(),
-                pedido.getStatus().toString(),
-                converterItensParaDTO(pedido.getItens())
-        );
+                pedido.getStatus().toString(), null);
+
+//        return new PedidoResponseDTO(
+//                pedido.getIdPedido(),
+//                pedido.getDataPedido(),
+//                pedido.getStatus().toString(),
+//                converterItensParaDTO(pedido.getItens())
+//        );
     }
 
     private List<PedidoResponseDTO.ItemPedidoResumoDTO> converterItensParaDTO(List<ItemPedido> itens) {
@@ -71,31 +71,28 @@ public class PedidoService {
 //    public Pedido inserir(Pedido pedido) {
 //        return repository.save(pedido);
 //    }
-    public Pedido inserirPedidoDTO(PedidoRequestDTO dto) {
-        Cliente cliente = clienteRepository.findById(dto.getClienteId())
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
+public Pedido inserirPedidoDTO(PedidoRequestDTO dto) {
+    Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+            .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
-        Pedido pedido = new Pedido();
-        pedido.setCliente(cliente);
-        pedido.setDataPedido(LocalDateTime.now());
-        pedido.setStatus(StatusPedido.PENDENTE); // ou PROCESSANDO, CONCLUIDO, etc.
+    Pedido pedido = new Pedido();
+    //pedido.setUsuario(usuario);
+    pedido.setStatus(StatusPedido.PENDENTE);
 
-        List<ItemPedido> itens = dto.getItens().stream().map(itemDTO -> {
-            Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
+    List<ItemPedido> itens = dto.getItens().stream().map(itemDTO -> {
+        Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
 
-            ItemPedido item = new ItemPedido();
-            item.setPedido(pedido); // relacionamento inverso!
-            item.setProduto(produto);
-            item.setQuantidade(itemDTO.getQuantidade());
-            item.setPrecoUnitario(BigDecimal.valueOf(itemDTO.getPrecoUnitario()));
-            return item;
-        }).collect(Collectors.toList());
-
-        pedido.setItens(itens);
-
-        return repository.save(pedido);
-    }
+        ItemPedido item = new ItemPedido();
+        item.setPedido(pedido);
+        item.setProduto(produto);
+        item.setQuantidade(itemDTO.getQuantidade());
+        item.setPrecoUnitario(produto.getPreco());
+        return item;
+    }).collect(Collectors.toList());
+   // pedido.setItens(itens);
+    return repository.save(pedido);
+}
 
     public void delete(int id) {
         repository.deleteById(id);

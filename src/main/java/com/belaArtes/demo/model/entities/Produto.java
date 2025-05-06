@@ -1,10 +1,14 @@
 package com.belaArtes.demo.model.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Objects;
-
+@Getter
+@Setter
 @Entity
 @Table(name = "Produto")
 public class Produto {
@@ -45,60 +49,26 @@ public class Produto {
         this.estoque = estoque;
     }
 
-    public int getIdProduto() {
-        return idProduto;
-    }
-
-    public void setIdProduto(int idProduto) {
-        this.idProduto = idProduto;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
+    public Produto(String nome, String descricao, String categoria, BigDecimal preco, byte[] imagem, Integer estoque) {
         this.nome = nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
         this.categoria = categoria;
-    }
-
-    public BigDecimal getPreco() {
-        return preco;
-    }
-
-    public void setPreco(BigDecimal preco) {
         this.preco = preco;
-    }
-
-    public byte[] getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(byte[] imagem) {
         this.imagem = imagem;
-    }
-
-    public Integer getEstoque() {
-        return estoque;
-    }
-
-    public void setEstoque(Integer estoque) {
         this.estoque = estoque;
+    }
+
+    @Override
+    public String toString() {
+        return "Produto{" +
+                "idProduto=" + idProduto +
+                ", nome='" + nome + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", categoria='" + categoria + '\'' +
+                ", preco=" + preco +
+                ", imagem=" + Arrays.toString(imagem) +
+                ", estoque=" + estoque +
+                '}';
     }
 
     @Override

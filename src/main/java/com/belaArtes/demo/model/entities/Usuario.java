@@ -2,9 +2,12 @@ package com.belaArtes.demo.model.entities;
 
 import com.belaArtes.demo.model.entities.enums.Cargo;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
-
+@Getter
+@Setter
 @Entity
 @Table(name = "Usuario")
 public class Usuario {
@@ -19,11 +22,14 @@ public class Usuario {
     @Column(nullable = false, length = 255)
     private String senhaHash;
 
+    private boolean isActive;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Cargo cargo;
 
     public Usuario() {
+        this.isActive = true;
     }
 
     public Usuario(int idUsuario, String email, String senhaHash, Cargo cargo) {
@@ -31,35 +37,20 @@ public class Usuario {
         this.email = email;
         this.senhaHash = senhaHash;
         this.cargo = cargo;
+        this.isActive = true;
     }
 
-    public int getIdUsuario() {
-        return idUsuario;
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "idUsuario=" + idUsuario +
+                ", email='" + email + '\'' +
+                ", senhaHash='" + senhaHash + '\'' +
+                ", cargo=" + cargo +
+                '}';
     }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getSenhaHash() {
-        return senhaHash;
-    }
-
-    public void setSenhaHash(String senhaHash) {
-        this.senhaHash = senhaHash;
-    }
-
-    public Cargo getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(Cargo cargo) {
-        this.cargo = cargo;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -72,4 +63,6 @@ public class Usuario {
     public int hashCode() {
         return Objects.hashCode(idUsuario);
     }
+
+
 }

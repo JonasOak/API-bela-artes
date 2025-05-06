@@ -1,9 +1,12 @@
 package com.belaArtes.demo.model.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
-
+@Getter
+@Setter
 @Entity
 @Table(name = "Cliente")
 public class Cliente {
@@ -11,6 +14,10 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idCliente;
+
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id_usuario", nullable = false, unique = true)
+    private Usuario usuario;
 
     @Column(nullable = false, length = 255)
     private String nome;
@@ -39,8 +46,9 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(int idCliente, String nome, String cpf, String telefone, String logradouro, String numero, String bairro, String cep, String complemento) {
+    public Cliente(int idCliente, Usuario usuario, String nome, String cpf, String telefone, String logradouro, String numero, String bairro, String cep, String complemento) {
         this.idCliente = idCliente;
+        this.usuario = usuario;
         this.nome = nome;
         this.cpf = cpf;
         this.telefone = telefone;
@@ -51,73 +59,22 @@ public class Cliente {
         this.complemento = complemento;
     }
 
-    public int getIdCliente() {
-        return idCliente;
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "idCliente=" + idCliente +
+                ", usuario=" + usuario +
+                ", nome='" + nome + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", logradouro='" + logradouro + '\'' +
+                ", numero='" + numero + '\'' +
+                ", bairro='" + bairro + '\'' +
+                ", cep='" + cep + '\'' +
+                ", complemento='" + complemento + '\'' +
+                '}';
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getLogradouro() {
-        return logradouro;
-    }
-
-    public void setLogradouro(String logradouro) {
-        this.logradouro = logradouro;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getComplemento() {
-        return complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
 
     @Override
     public boolean equals(Object o) {
