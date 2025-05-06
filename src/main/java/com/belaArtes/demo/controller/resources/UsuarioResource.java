@@ -103,6 +103,12 @@ public class UsuarioResource {
         }
     }
 
+    @PutMapping
+    public ResponseEntity<Map<String, String>> updateUser(@RequestBody Usuario user) {
+        usuarioService.updateUser(user);
+        return ResponseEntity.ok(Map.of("mensagem", "Usuario atualizado com sucesso"));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deletarUsuario(@PathVariable("id") Integer id) {
         clienteService.delete(id);
