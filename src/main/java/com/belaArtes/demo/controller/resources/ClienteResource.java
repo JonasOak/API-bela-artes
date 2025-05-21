@@ -5,6 +5,7 @@ import com.belaArtes.demo.controller.resources.exceptions.ClientException;
 import com.belaArtes.demo.controller.services.ClienteService;
 import com.belaArtes.demo.model.entities.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -52,9 +53,9 @@ public class ClienteResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Cliente> atualizar(@PathVariable int id, @RequestBody Cliente obj) {
+    public ResponseEntity<String> atualizar(@PathVariable int id, @RequestBody Cliente obj) {
         obj = service.atualizar(id, obj);
-        return ResponseEntity.ok().body(obj);
+        return ResponseEntity.status(HttpStatus.OK).body("{\"message\": \"Cliente atualizado\"}");
     }
 
 
