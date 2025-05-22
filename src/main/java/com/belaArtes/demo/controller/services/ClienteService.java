@@ -55,6 +55,7 @@ public class ClienteService {
         try {
             Cliente clienteExistente = repository.getReferenceById(id);
             atualizarDados(clienteExistente, obj);
+            usuarioService.atualizar(obj.getIdCliente(), obj.getUsuario());
             return repository.save(clienteExistente);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Cliente com ID " + id + " não encontrado para atualização");

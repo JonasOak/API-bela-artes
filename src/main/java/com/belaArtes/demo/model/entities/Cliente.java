@@ -15,7 +15,7 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idCliente;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_usuario", nullable = false, unique = true)
     private Usuario usuario;
 
@@ -59,6 +59,19 @@ public class Cliente {
         this.complemento = complemento;
     }
 
+    public Cliente(int idCliente, String nome, String cpf, String telefone, String logradouro, String numero, String bairro, String cep, String complemento, Usuario usuario) {
+        this.idCliente = idCliente;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.telefone = telefone;
+        this.logradouro = logradouro;
+        this.numero = numero;
+        this.bairro = bairro;
+        this.cep = cep;
+        this.complemento = complemento;
+        this.usuario = usuario;
+    }
+
     @Override
     public String toString() {
         return "Cliente{" +
@@ -74,7 +87,6 @@ public class Cliente {
                 ", complemento='" + complemento + '\'' +
                 '}';
     }
-
 
     @Override
     public boolean equals(Object o) {

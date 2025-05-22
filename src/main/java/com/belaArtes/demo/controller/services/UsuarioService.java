@@ -71,10 +71,10 @@ public class UsuarioService {
         if (novoUsuario.getEmail() != null) {
             usuarioExistente.setEmail(novoUsuario.getEmail());
         }
-        if (novoUsuario.getSenhaHash() != null) {
-            String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenhaHash());
-            usuarioExistente.setSenhaHash(senhaCriptografada);
-        }
+//        if (novoUsuario.getSenhaHash() != null) {
+//            String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenhaHash());
+//            usuarioExistente.setSenhaHash(senhaCriptografada);
+//        }
         if (novoUsuario.getCargo() != null) {
             usuarioExistente.setCargo(novoUsuario.getCargo());
         }
